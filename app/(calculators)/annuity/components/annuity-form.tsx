@@ -202,6 +202,7 @@ const AnnuityCalculatorForm = () => {
             min={0}
             max={100}
             suffix="%"
+            locale="de-DE"
           />
         </div>
         {fixedRate && (
@@ -214,7 +215,7 @@ const AnnuityCalculatorForm = () => {
               onValueChange={(e) => setMonthlyRate(e.value ?? 0)}
               mode="currency"
               currency="EUR"
-              locale="de"
+              locale="de-DE"
             />
           </div>
         )}
