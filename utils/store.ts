@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 
 interface Payment {
-    month: Date;
+    month: string;
     totalPayment: number;
     interestPayment: number;
     principalPayment: number;
