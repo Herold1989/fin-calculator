@@ -17,13 +17,20 @@ import { Card } from "primereact/card";
 
 // Custom Tooltip Content
 const CustomTooltip = ({ active, payload, label }: TooltipProps<any, any>) => {
+  const numberFormatter = new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-2 border rounded shadow-lg">
         <p className="label">{label}</p>
         {payload.map((entry, index) => (
           <p key={index} className="intro" style={{ color: entry.color }}>
-            {entry.name}: €{entry.value.toFixed(2)}
+            {entry.name}: {numberFormatter.format(entry.value)}
           </p>
         ))}
       </div>
@@ -34,8 +41,15 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<any, any>) => {
 };
 
 // Custom Y-axis label formatter
+// Custom Y-axis label formatter
 const formatYAxis = (tickItem: number) => {
-  return ` € ${tickItem.toFixed(2)}`;
+  const numberFormatter = new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+  return numberFormatter.format(tickItem);
 };
 
 const AnnuityChart = () => {
