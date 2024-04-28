@@ -1,10 +1,10 @@
 "use client"
 
 import { Card } from "primereact/card";
-import AnnuityChart from "./components/annuity-chart";
-import AnnuityCalculatorForm from "./components/annuity-form";
-import RemainingLoanChart from "./components/remaining-loan-chart";
-import PaymentScheduleTable from "./components/payment-schedule-table";
+import AnnuityChart from "./components/AnnuityChart/AnnuityChart";
+import AnnuityCalculatorForm from "./components/AnnuityForm/AnnuityForm";
+import RemainingLoanChart from "./components/RemainingLoanChart/RemainingLoanChart";
+import PaymentScheduleTable from "./components/PaymentScheduleTable/PaymentScheduleTable";
 
 const AnnuityCalculator = () => {
     return (

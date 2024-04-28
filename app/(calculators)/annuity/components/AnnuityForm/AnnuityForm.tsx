@@ -7,7 +7,7 @@ import {
 } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 import useStore from "@/utils/store";
-import { Checkbox, CheckboxChangeEvent } from "primereact/checkbox";
+import { RadioButton, RadioButtonChangeEvent } from "primereact/radiobutton";
 
 interface AnnuityCalculatorFormProps {
   loan: number;
@@ -27,7 +27,7 @@ const AnnuityCalculatorForm = () => {
   const [fixedTime, setFixedTime] = useState<boolean>(false);
   const [monthlyRate, setMonthlyRate] = useState<number>(0); // State for the monthly rate input by the user
 
-  const onOptionsChange = (e: CheckboxChangeEvent, option: "loan" | "time") => {
+  const onOptionsChange = (e: RadioButtonChangeEvent, option: "loan" | "time") => {
     // Ensure isChecked is always boolean by using `!!` to convert undefined or null to false
     const isChecked = !!e.checked;
 
@@ -52,8 +52,6 @@ const AnnuityCalculatorForm = () => {
     setYears(e.value ?? 1);
   };
 
-  // Implement the logic to handle the date change here, use the calender.d.ts file for reference if needed
-
   const handleStartDateChange = (e: Date) => {
     setStartDate(e);
   };
@@ -65,6 +63,7 @@ const AnnuityCalculatorForm = () => {
     startDate,
     monthlyRateFixed, // Added as an optional parameter to handle fixed rate logic
   }: AnnuityCalculatorFormProps & { monthlyRateFixed?: number }) => {
+    
     if (!loan || !interestRate || !startDate) {
       throw new Error("Please ensure all fields are correctly filled out.");
     }
@@ -81,16 +80,18 @@ const AnnuityCalculatorForm = () => {
 
       if (monthlyRateFixed < minimumRequiredPayment) {
         setResults(
-          `The fixed monthly rate of €${monthlyRateFixed.toFixed(
+          `Die gewählte Rate von €${monthlyRateFixed.toFixed(
             2
-          )} is too low. It must be at least €${minimumRequiredPayment.toFixed(
+          )} ist zu niedrig. Sie sollte mindestens €${minimumRequiredPayment.toFixed(
             2
-          )} to cover the interest and principal.`
+          )} betragen um Zinszahlung und Tilgung (min. 1%) abzudecken.`
         );
         throw new Error(
-          `The fixed monthly rate is too low. Minimum required is €${minimumRequiredPayment.toFixed(
+          `Die gewählte Rate von €${monthlyRateFixed.toFixed(
             2
-          )}.`
+          )} ist zu niedrig. Sie sollte mindestens €${minimumRequiredPayment.toFixed(
+            2
+          )} betragen um Zinszahlung und Tilgung (min. 1%) abzudecken.`
         );
       }
 
@@ -98,7 +99,9 @@ const AnnuityCalculatorForm = () => {
       numberOfPayments = Math.ceil(
         loan / (monthlyRateFixed - loan * monthlyRate)
       );
+
     } else {
+      
       numberOfPayments = years * 12;
       const annuityFactor =
         (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
@@ -141,29 +144,28 @@ const AnnuityCalculatorForm = () => {
         startDate, // Notice years is not required here
         monthlyRateFixed: monthlyRate, // Pass the user-defined fixed monthly rate
       });
-      
+
       // Adjust the results message to display the calculated time to repay the loan
       const lastYearAndMonth = paymentDetails.paymentSchedule.slice(-1)[0];
       // Get the start month/year
-      const startMonthAndYear = `${startDate.getMonth() + 1}/${startDate.getFullYear()}`;      
-      console.log(startMonthAndYear);
+      const startMonthAndYear = `${
+        startDate.getMonth() + 1
+      }/${startDate.getFullYear()}`;
 
       // Find the difference between the last month/year in the payment schedule and the start date, save it in years and months
       const lastMonthAndYear = lastYearAndMonth.month;
-      const lastMonth = parseInt(lastMonthAndYear.split('/')[0]);
-      const lastYear = parseInt(lastMonthAndYear.split('/')[1]);
-      const startMonth = parseInt(startMonthAndYear.split('/')[0]);
-      const startYear = parseInt(startMonthAndYear.split('/')[1]);
+      const lastMonth = parseInt(lastMonthAndYear.split("/")[0]);
+      const lastYear = parseInt(lastMonthAndYear.split("/")[1]);
+      const startMonth = parseInt(startMonthAndYear.split("/")[0]);
+      const startYear = parseInt(startMonthAndYear.split("/")[1]);
 
-      let years  = lastYear - startYear;
+      let years = lastYear - startYear;
       let months = lastMonth - startMonth;
 
       if (months < 0) {
         years--;
         months += 12;
       }
-
-      console.log(`Years: ${years}, Months: ${months}`);
 
       setResults(
         `Rückzahlungszeitraum: ${years} Jahre und ${months} Monate bei einer monatlichen Rate von €${paymentDetails.monthlyPayment.toFixed(
@@ -204,22 +206,22 @@ const AnnuityCalculatorForm = () => {
       <div className="flex flex-col space-y-4">
         <div className="flex flex-wrap justify-content-center gap-3">
           <div className="flex align-items-center">
-            <Checkbox
+          <RadioButton
               inputId="option1"
-              checked={fixedRate}
+              value="Feste Kreditrate"
               onChange={(e) => onOptionsChange(e, "loan")}
-              value="loan"
+              checked={fixedRate}
             />
             <label htmlFor="option1" className="ml-2">
               Feste Kreditrate
             </label>
           </div>
           <div className="flex align-items-center">
-            <Checkbox
+            <RadioButton
               inputId="option2"
-              checked={fixedTime}
+              value="Fester Rückzahlungszeitraum"
               onChange={(e) => onOptionsChange(e, "time")}
-              value="time"
+              checked={fixedTime}
             />
             <label htmlFor="option2" className="ml-2">
               Fester Rückzahlungszeitraum
