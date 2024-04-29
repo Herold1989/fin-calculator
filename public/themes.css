@@ -1698,7 +1698,7 @@
       height: 22px;
       color: rgba(255, 255, 255, 0.87);
       border-radius: 50%;
-      transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+      /* transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s; */
     }
     .p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
       border-color: #818cf8;
@@ -1706,7 +1706,7 @@
     .p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus {
       outline: 0 none;
       outline-offset: 0;
-      box-shadow: 0 0 0 0.2rem rgba(129, 140, 248, 0.2);
+      /* box-shadow: 0 0 0 0.2rem rgba(129, 140, 248, 0.2); */
       border-color: #818cf8;
     }
     .p-radiobutton .p-radiobutton-box .p-radiobutton-icon {
