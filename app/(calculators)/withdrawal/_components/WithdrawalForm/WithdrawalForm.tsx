@@ -221,7 +221,7 @@ const WithdrawalCalculatorForm = () => {
       footer={
         <Button
           className="mt-4"
-          label="Rate berechnen"
+          label={fixedRate ? "Rate berechnen" : "Zeitraum berechnen"}
           onClick={handleSubmit}
         />
       }
