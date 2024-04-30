@@ -11,7 +11,7 @@ const WithdrawalScheduleTable = () => {
   // Function to handle CSV export
   const exportCSV = () => {
     const csvHeader =
-      "Month,Total Payment,Interest Payment,Principal Withdrawal,Remaining Wealth\n";
+      "Datum,Monatl. Entnahme,Zinsanteil,Kapitalabschmelzung,Restkapital\n";
     const csvRows = payments
       .map(
         (payment) =>
@@ -31,7 +31,7 @@ const WithdrawalScheduleTable = () => {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", "withdrawal-schedule.csv");
+    link.setAttribute("download", "Entnahmeplan.csv");
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();

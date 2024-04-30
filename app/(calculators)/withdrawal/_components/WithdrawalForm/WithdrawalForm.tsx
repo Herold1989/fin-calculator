@@ -86,17 +86,16 @@ const WithdrawalCalculatorForm = () => {
       if (principalWithdrawal <= 0) {
         const errorMessage = `Die gewählte monatliche Rate von €${monthlyRateFixed.toFixed(2)} ist nicht ausreichend, da sie nicht das Kapital reduziert. Bitte erhöhe die monatliche Auszahlung.`;
         setResults(errorMessage)
-        throw new Error(errorMessage);
       }
 
       monthlyPayment = monthlyRateFixed;
       let remainingWealth = wealth;
-      
       // Calculate how many payments until the wealth is depleted
       while (remainingWealth > 0) {
         remainingWealth -= principalWithdrawal; // Reduce wealth by the principal withdrawal each month
         numberOfPayments++;
         if (numberOfPayments > 1000) { // Safeguard against infinite loops
+          setResults("Zu viele Zahlungen berechnet, bitte überprüfen Sie die Eingaben.");
           throw new Error("Zu viele Zahlungen berechnet, bitte überprüfen Sie die Eingaben.");
         }
       }
@@ -137,8 +136,6 @@ const WithdrawalCalculatorForm = () => {
     };
   };
 
-  
-  
 
   const handleSubmit = () => {
     let paymentDetails;
