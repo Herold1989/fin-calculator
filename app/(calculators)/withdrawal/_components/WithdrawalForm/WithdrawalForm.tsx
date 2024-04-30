@@ -73,68 +73,86 @@ const WithdrawalCalculatorForm = () => {
     if (!wealth || !interestRate || !years || !startDate) {
       throw new Error("Please ensure all fields are correctly filled out.");
     }
-  
+
     const monthlyInterestRate = interestRate / 100 / 12;
     let monthlyPayment = 0; // Initialize monthly payment
-    let numberOfPayments = 0; // Initialize the number of payments
     let paymentSchedule = []; // Initialize payment schedule
-  
+    let remainingWealth = wealth;
+    let currentDate = new Date(startDate);
+
     if (monthlyRateFixed) {
+      monthlyPayment = monthlyRateFixed;
+
       const interestGenerated = wealth * monthlyInterestRate;
-      const principalWithdrawal = monthlyRateFixed - interestGenerated;
+      const principalWithdrawal = monthlyPayment - interestGenerated;
 
       if (principalWithdrawal <= 0) {
-        const errorMessage = `Die gewählte monatliche Rate von €${monthlyRateFixed.toFixed(2)} ist nicht ausreichend, da sie nicht das Kapital reduziert. Bitte erhöhe die monatliche Auszahlung.`;
+        const errorMessage = `Die gewählte monatliche Rate von €${monthlyRateFixed.toFixed(2)} liegt auf oder unter dem monatlichen Zinsetrag. Zur Berechnung eines Entnahmeplans wähle mindestens €${(interestGenerated + 0.01).toFixed(2)}.`;
         setResults(errorMessage)
       }
 
-      monthlyPayment = monthlyRateFixed;
-      let remainingWealth = wealth;
-      // Calculate how many payments until the wealth is depleted
       while (remainingWealth > 0) {
-        remainingWealth -= principalWithdrawal; // Reduce wealth by the principal withdrawal each month
-        numberOfPayments++;
-        if (numberOfPayments > 1000) { // Safeguard against infinite loops
-          setResults("Zu viele Zahlungen berechnet, bitte überprüfen Sie die Eingaben.");
+        const interestIncome = remainingWealth * monthlyInterestRate;
+        let netWithdrawal = monthlyRateFixed - interestIncome; // This could be negative if interest income is greater
+
+        if (remainingWealth < netWithdrawal) {
+          netWithdrawal = remainingWealth; // Adjust the final payment to match the remaining wealth
+        }
+
+        remainingWealth -= netWithdrawal; // Decreasing remaining wealth by the net withdrawal
+
+        paymentSchedule.push({
+          month: `${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`,
+          totalPayment: netWithdrawal + interestIncome, // Total payment adjusted if it's the last payment
+          interestPayment: interestIncome,
+          principalWithdrawal: netWithdrawal,
+          remainingWealth: remainingWealth >= 0 ? remainingWealth : 0
+        });
+
+        currentDate.setMonth(currentDate.getMonth() + 1);
+
+        if (paymentSchedule.length > 1000) { // Safeguard against infinite loops
           throw new Error("Zu viele Zahlungen berechnet, bitte überprüfen Sie die Eingaben.");
         }
       }
-  
+
     } else {
-      numberOfPayments = years * 12; // Calculate the total number of payments based on the number of years
-      // Calculate the annuity factor
+      const numberOfPayments = years * 12;
       const annuityFactor = (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) /
         (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
-      // Calculate the monthly payment required to reduce the initial wealth to zero over the specified period
       monthlyPayment = wealth * annuityFactor;
+
+      for (let i = 0; i < numberOfPayments && remainingWealth > 0; i++) {
+        const interestIncome = remainingWealth * monthlyInterestRate;
+        let principalWithdrawal = monthlyPayment - interestIncome;
+
+        if (remainingWealth < principalWithdrawal) {
+          principalWithdrawal = remainingWealth; // Adjust the final payment to match the remaining wealth
+        }
+
+        remainingWealth -= principalWithdrawal; // Decrease the remaining wealth by the principal withdrawal amount
+
+        paymentSchedule.push({
+          month: `${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`,
+          totalPayment: principalWithdrawal + interestIncome, // Total payment adjusted if it's the last payment
+          interestPayment: interestIncome,
+          principalWithdrawal,
+          remainingWealth: remainingWealth >= 0 ? remainingWealth : 0
+        });
+
+        currentDate.setMonth(currentDate.getMonth() + 1);
+      }
     }
-  
-    let remainingWealth = wealth;
-    let currentDate = new Date(startDate);
-  
-    // Generate payment schedule using the correct number of payments
-    for (let i = 1; i <= numberOfPayments && remainingWealth > 0; i++) {
-      const interestIncome = remainingWealth * monthlyInterestRate;
-      const principalWithdrawal = monthlyPayment - interestIncome;
-      remainingWealth -= principalWithdrawal; // Decrease the remaining wealth by the principal withdrawal amount
-  
-      paymentSchedule.push({
-        month: `${currentDate.getMonth() + 1}/${currentDate.getFullYear()}`,
-        totalPayment: monthlyPayment,
-        interestPayment: interestIncome,
-        principalWithdrawal,
-        remainingWealth: Math.max(0, remainingWealth), // Ensure that the remaining wealth doesn't go negative
-      });
-  
-      currentDate.setMonth(currentDate.getMonth() + 1);
-    }
-  
+
     return {
       monthlyPayment,
-      numberOfPayments,
-      paymentSchedule,
+      numberOfPayments: paymentSchedule.length,
+      paymentSchedule
     };
   };
+
+
+
 
 
   const handleSubmit = () => {

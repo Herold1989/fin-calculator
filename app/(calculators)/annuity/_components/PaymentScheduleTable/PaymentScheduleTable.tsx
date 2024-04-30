@@ -11,7 +11,7 @@ const PaymentScheduleTable = () => {
   // Function to handle CSV export
   const exportCSV = () => {
     const csvHeader =
-      "Month,Total Payment,Interest Payment,Principal Payment,Remaining Loan\n";
+      "Datum,Monatl. Rate,Zinsanteil,Tilgung,Restkredit\n";
     const csvRows = payments
       .map(
         (payment) =>
@@ -31,7 +31,7 @@ const PaymentScheduleTable = () => {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", "payment-schedule.csv");
+    link.setAttribute("download", "Tilgungsplan.csv");
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
