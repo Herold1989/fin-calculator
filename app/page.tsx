@@ -22,6 +22,13 @@ export default function Home() {
           </Link>
         </Button>
       </div>
+      <div className="mt-4 items-center justify-center text-center">
+        <Button severity="info">
+          <Link href="/necessary-wealth" className="p-button font-bold">
+            Kapitalbedarfsrechner{" "}
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }
