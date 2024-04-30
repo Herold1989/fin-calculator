@@ -53,7 +53,7 @@ const NecessaryWealthForm = () => {
       footer={
         <Button
           className="mt-4"
-          label="Rate berechnen"
+          label="Kapital berechnen"
           onClick={handleSubmit}
         />
       }
