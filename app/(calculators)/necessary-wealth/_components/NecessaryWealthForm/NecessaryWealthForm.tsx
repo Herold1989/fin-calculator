@@ -43,7 +43,7 @@ const NecessaryWealthForm = () => {
     );
     const formattedWealth = currencyFormatter.format(necessaryWealth); // Format and set the results
 
-    setResults(`Benötigtes Kapital: €${formattedWealth}`);
+    setResults(`Benötigtes Kapital: ${formattedWealth}`);
   };
 
   return (
