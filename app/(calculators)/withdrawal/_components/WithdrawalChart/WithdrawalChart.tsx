@@ -2,23 +2,22 @@
 
 import React from "react";
 import {
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
   TooltipProps,
-  BarChart,
-  Bar,
   Legend,
 } from "recharts";
-import useStore from "@/utils/AnnuityStore/annuity-store";
 import { Card } from "primereact/card";
 import { currencyFormatter } from "@/utils/formatCurrency";
+import useStore from "@/utils/WithdrawalStore/withdrawal-store";
 
 // Custom Tooltip Content
 const CustomTooltip = ({ active, payload, label }: TooltipProps<any, any>) => {
-
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-2 border rounded shadow-lg">
@@ -38,7 +37,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<any, any>) => {
 const formatCurrencyForAxis = (tickItem: number): string =>
   currencyFormatter.format(tickItem);
 
-const RemainingLoanChart = () => {
+const WithdrawalChart = () => {
   const payments = useStore((state) => state.payments);
 
   return (
@@ -51,34 +50,39 @@ const RemainingLoanChart = () => {
             marginTop: "15px",
           }}
         >
-          Rückzahlungszeitraum
+          Zinseinkommen und Kapitalreduzierung im Entnahmezeitraum
         </h2>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart
+          <AreaChart
             data={payments}
-            margin={{ top: 10, right: 30, left: 20, bottom: 0 }}
+            margin={{ top: 10, right: 30, left: 30, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
-            <YAxis
-              tickFormatter={formatCurrencyForAxis}
-              width={100} // Increase the width as needed to avoid cutting off labels
-              domain={[0, "auto"]}
-            />{" "}
+            <YAxis tickFormatter={formatCurrencyForAxis} width={80} />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
-            <Bar
+            <Area
               type="monotone"
-              dataKey="remainingLoan"
-              stroke="#CC6CE7"
-              fill="#CC6CE7"
-              name={"Verbleibender Kreditbetrag"}
+              dataKey="interestPayment"
+              stackId="1"
+              name="Zinseinkommen"
+              stroke="#47D6DB"
+              fill="#47D6DB"
             />
-          </BarChart>
+            <Area
+              type="monotone"
+              dataKey="principalWithdrawal"
+              stackId="1"
+              name="Abschmelzung"
+              stroke="#72C94F"
+              fill="#72C94F"
+            />
+          </AreaChart>
         </ResponsiveContainer>
       </Card>
     </div>
   );
 };
 
-export default RemainingLoanChart;
+export default WithdrawalChart;

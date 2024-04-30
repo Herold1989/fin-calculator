@@ -12,7 +12,7 @@ import {
   TooltipProps,
   Legend,
 } from "recharts";
-import useStore from "@/utils/store";
+import useStore from "@/utils/AnnuityStore/annuity-store";
 import { Card } from "primereact/card";
 import { currencyFormatter } from "@/utils/formatCurrency";
 

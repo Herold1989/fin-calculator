@@ -10,11 +10,15 @@ export default function Home() {
       </h1>
       <div className="mt-16 items-center justify-center text-center">
         <Button severity="info">
-          <Link
-            href="/annuity"
-            className="p-button font-bold"
-          >
+          <Link href="/annuity" className="p-button font-bold">
             Annuitätenrechner
+          </Link>
+        </Button>
+      </div>
+      <div className="mt-4 items-center justify-center text-center">
+        <Button severity="info">
+          <Link href="/withdrawal" className="p-button font-bold">
+            Entnahmerechner
           </Link>
         </Button>
       </div>

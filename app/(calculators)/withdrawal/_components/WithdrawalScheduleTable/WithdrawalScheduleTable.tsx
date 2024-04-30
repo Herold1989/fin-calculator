@@ -2,16 +2,16 @@ import React from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import useStore from "@/utils/AnnuityStore/annuity-store";
+import useStore from "@/utils/WithdrawalStore/withdrawal-store";
 import { Card } from "primereact/card";
 
-const PaymentScheduleTable = () => {
+const WithdrawalScheduleTable = () => {
   const payments = useStore((state) => state.payments);
 
   // Function to handle CSV export
   const exportCSV = () => {
     const csvHeader =
-      "Month,Total Payment,Interest Payment,Principal Payment,Remaining Loan\n";
+      "Month,Total Payment,Interest Payment,Principal Withdrawal,Remaining Wealth\n";
     const csvRows = payments
       .map(
         (payment) =>
@@ -19,9 +19,9 @@ const PaymentScheduleTable = () => {
             2
           )},${payment.interestPayment.toFixed(
             2
-          )},${payment.principalPayment.toFixed(
+          )},${payment.principalWithdrawal.toFixed(
             2
-          )},${payment.remainingLoan.toFixed(2)}`
+          )},${payment.remainingWealth.toFixed(2)}`
       )
       .join("\n");
 
@@ -31,7 +31,7 @@ const PaymentScheduleTable = () => {
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
-    link.setAttribute("download", "payment-schedule.csv");
+    link.setAttribute("download", "withdrawal-schedule.csv");
     link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
@@ -59,25 +59,25 @@ const PaymentScheduleTable = () => {
           <Column field="month" header="Monat" />
           <Column
             field="totalPayment"
-            header="Kreditrate"
+            header="Entnahmerate"
             body={(rowData) => currencyBodyTemplate(rowData, "totalPayment")}
           />
           <Column
             field="interestPayment"
-            header="Zinszahlung"
+            header="Zinseinkommen"
             body={(rowData) => currencyBodyTemplate(rowData, "interestPayment")}
           />
           <Column
-            field="principalPayment"
-            header="Tilgung"
+            field="principalWithdrawal"
+            header="Abschmelzung"
             body={(rowData) =>
-              currencyBodyTemplate(rowData, "principalPayment")
+              currencyBodyTemplate(rowData, "principalWithdrawal")
             }
           />
           <Column
-            field="remainingLoan"
-            header="Restschuld"
-            body={(rowData) => currencyBodyTemplate(rowData, "remainingLoan")}
+            field="remainingWealth"
+            header="Restkapital"
+            body={(rowData) => currencyBodyTemplate(rowData, "remainingWealth")}
           />
         </DataTable>
       </div>
@@ -92,4 +92,4 @@ const PaymentScheduleTable = () => {
   );
 };
 
-export default PaymentScheduleTable;
+export default WithdrawalScheduleTable;

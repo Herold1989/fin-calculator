@@ -12,7 +12,7 @@ import {
   Bar,
   Legend,
 } from "recharts";
-import useStore from "@/utils/AnnuityStore/annuity-store";
+import useStore from "@/utils/WithdrawalStore/withdrawal-store";
 import { Card } from "primereact/card";
 import { currencyFormatter } from "@/utils/formatCurrency";
 
@@ -38,7 +38,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<any, any>) => {
 const formatCurrencyForAxis = (tickItem: number): string =>
   currencyFormatter.format(tickItem);
 
-const RemainingLoanChart = () => {
+const WithdrawalChart = () => {
   const payments = useStore((state) => state.payments);
 
   return (
@@ -51,7 +51,7 @@ const RemainingLoanChart = () => {
             marginTop: "15px",
           }}
         >
-          Rückzahlungszeitraum
+          Entnahmezeitraum
         </h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
@@ -69,10 +69,10 @@ const RemainingLoanChart = () => {
             <Legend />
             <Bar
               type="monotone"
-              dataKey="remainingLoan"
+              dataKey="remainingWealth"
               stroke="#CC6CE7"
               fill="#CC6CE7"
-              name={"Verbleibender Kreditbetrag"}
+              name={"Verbleibendes Kapitalvermögen"}
             />
           </BarChart>
         </ResponsiveContainer>
@@ -81,4 +81,4 @@ const RemainingLoanChart = () => {
   );
 };
 
-export default RemainingLoanChart;
+export default WithdrawalChart;
