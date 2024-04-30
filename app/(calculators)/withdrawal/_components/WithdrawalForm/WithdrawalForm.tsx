@@ -84,7 +84,8 @@ const WithdrawalCalculatorForm = () => {
       const principalWithdrawal = monthlyRateFixed - interestGenerated;
 
       if (principalWithdrawal <= 0) {
-        const errorMessage = `Die gewählte monatliche Rate von €${monthlyRateFixed.toFixed(2)} ist nicht ausreichend, da sie nicht das Kapital reduziert.`;
+        const errorMessage = `Die gewählte monatliche Rate von €${monthlyRateFixed.toFixed(2)} ist nicht ausreichend, da sie nicht das Kapital reduziert. Bitte erhöhe die monatliche Auszahlung.`;
+        setResults(errorMessage)
         throw new Error(errorMessage);
       }
 
